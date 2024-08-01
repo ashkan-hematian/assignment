@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  dagster:
+    build: .
+    environment:
+      - DAGSTER_PG_USERNAME=postgres
+      - DAGSTER_PG_PASSWORD=admin
+      - DAGSTER_PG_HOST=db
+      - DAGSTER_PG_PORT=5432
+      - DAGSTER_PG_DB=dagster
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=dagster
+    ports:
+      - "5432:5432"
+
+  mongo:
+    image: mongo:7.0.12
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+networks:
+  my_network:
+    driver: bridge
